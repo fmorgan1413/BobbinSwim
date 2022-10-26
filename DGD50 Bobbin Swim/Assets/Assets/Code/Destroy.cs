@@ -18,10 +18,6 @@ public class Destroy : MonoBehaviour
     //destroy water and enemies
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.gameObject.tag == "water")
-        {
-            Destroy(other.gameObject);
-        }
         if (other.gameObject.tag == "enemy")
         {
             Destroy(other.gameObject);

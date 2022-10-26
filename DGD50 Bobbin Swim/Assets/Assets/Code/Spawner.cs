@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    //why would you spawn new water?? changed so that its 4 objects that just move around. dont use this, uncessary script
     public float timer;
-    public GameObject[] water;
+    public GameObject water;
     // Start is called before the first frame update
     void Start()
     {
@@ -23,8 +24,10 @@ public class Spawner : MonoBehaviour
         timer -= Time.fixedDeltaTime;
         if(timer <= 0.0f)
         {
-            Instantiate(water[UnityEngine.Random.Range(0, 4)], new Vector3(69, 0, 2), Quaternion.identity);
+            Instantiate(water, new Vector3(0, 0, 2), Quaternion.identity);
             timer = 3f;
         }
+
+       
     }
 }

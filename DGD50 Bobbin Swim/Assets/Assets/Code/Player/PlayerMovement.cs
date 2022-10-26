@@ -13,16 +13,22 @@ public class PlayerMovement : MonoBehaviour
     private int displayScore, gODisplayScore;
     public TextMeshProUGUI scoreText;
     public string gameover;
+    public ParticleSystem bubbles;
+    public bool inWater;
+
     // Start is called before the first frame update
     void Start()
     {
         score = 0;
         displayScore = 0;
+        bubbles = GetComponentInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
     void Update()
     {
+       // Vector2 vel = rb.velocity;
+
         //float rbVel = rb.velocity.y;
         //if(rbVel <= 5 && rbVel >= -20)
         //{
@@ -36,12 +42,17 @@ public class PlayerMovement : MonoBehaviour
             displayScore = score;
             scoreText.text = displayScore.ToString();
         }
+
+        //rb.velocity = vel;
+
     }
     //player movement in water
     private void OnTriggerStay2D(Collider2D other)
     {
+        //what the hell is this?? looks overcomplicated
         if (other.gameObject.tag == "water")
         {
+
             if (Input.GetKey(KeyCode.Space))
             {
                 rb.gravityScale = 0;
@@ -63,13 +74,19 @@ public class PlayerMovement : MonoBehaviour
     //player movement out of water
     private void OnTriggerExit2D(Collider2D other)
     {
+        var main = bubbles.main;
+
         if (other.gameObject.tag == "water")
         {
             rb.gravityScale = 1f;
+            //bubbles.Pause();
+            main.maxParticles = 0;
+            inWater = false;
         }
     }
     private void OnTriggerEnter2D(Collider2D other)
     {
+        var main = bubbles.main;
         //game over
         if(other.gameObject.tag == "enemy")
         {
@@ -86,6 +103,12 @@ public class PlayerMovement : MonoBehaviour
         {
             score++;
             Destroy(other.gameObject);
+        }
+        if (other.gameObject.tag == "water")
+        {
+            //bubbles.Play();
+            main.maxParticles = 50;
+            inWater = true;
         }
     }
 }
