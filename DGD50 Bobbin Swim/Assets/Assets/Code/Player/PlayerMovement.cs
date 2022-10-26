@@ -14,7 +14,9 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public string gameover;
     public ParticleSystem bubbles;
-    public bool inWater;
+
+    public Timer T;
+    //public bool inWater;
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +45,19 @@ public class PlayerMovement : MonoBehaviour
             scoreText.text = displayScore.ToString();
         }
 
+        if (Input.GetKey(KeyCode.Space))
+        {
+            rb.gravityScale = 0;
+            rb.AddForce(Vector3.up * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            this.transform.Rotate(0, 0, rb.velocity.y / 8);
+        }
+        else
+        {
+            rb.gravityScale = 0;
+            rb.AddForce(Vector3.down * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+            this.transform.Rotate(0, 0, rb.velocity.y / 8);
+        }
+
         //rb.velocity = vel;
 
     }
@@ -50,65 +65,62 @@ public class PlayerMovement : MonoBehaviour
     private void OnTriggerStay2D(Collider2D other)
     {
         //what the hell is this?? looks overcomplicated
-        if (other.gameObject.tag == "water")
+        if (other.gameObject.CompareTag("water"))
         {
 
-            if (Input.GetKey(KeyCode.Space))
-            {
-                rb.gravityScale = 0;
-                rb.AddForce(Vector3.down * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-                this.transform.Rotate(0, 0, rb.velocity.y / 8);
-            }
-            else
-            {
-                rb.gravityScale = 0;
-                rb.AddForce(Vector3.up * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-                this.transform.Rotate(0, 0, rb.velocity.y / 8);
-            }
+            
         }
         else
         {
-            rb.gravityScale = 1;
+           // rb.gravityScale = 1;
         }
     }
     //player movement out of water
-    private void OnTriggerExit2D(Collider2D other)
+
+    private void OnCollisionExit2D(Collision2D collision)
     {
         var main = bubbles.main;
 
-        if (other.gameObject.tag == "water")
+        if (collision.gameObject.CompareTag("water"))
         {
             rb.gravityScale = 1f;
             //bubbles.Pause();
             main.maxParticles = 0;
-            inWater = false;
+            //inWater = false;
         }
     }
-    private void OnTriggerEnter2D(Collider2D other)
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         var main = bubbles.main;
+
         //game over
-        if(other.gameObject.tag == "enemy")
+        if (collision.gameObject.CompareTag("enemy"))
         {
             Destroy(gameObject);
             SceneManager.LoadScene(gameover);
         }
-        if (other.gameObject.tag == "gameOver")
+        if (collision.gameObject.CompareTag("gameOver"))
         {
             Destroy(gameObject);
             SceneManager.LoadScene(gameover);
         }
         //collect coins and add score
-        if (other.gameObject.tag == "coin")
+        if (collision.gameObject.CompareTag("coin"))
         {
             score++;
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
         }
-        if (other.gameObject.tag == "water")
+        if (collision.gameObject.CompareTag("water"))
         {
             //bubbles.Play();
             main.maxParticles = 50;
-            inWater = true;
+            //inWater = true;
+        }
+        if (collision.gameObject.CompareTag("bubble"))
+        {
+            T.time += 5;
+            Destroy(collision.gameObject);
         }
     }
 }

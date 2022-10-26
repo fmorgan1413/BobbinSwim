@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyMovement : MonoBehaviour
 {
+    //literally the exact same as the coin movement. why bother having multiple scripts? just put the other one on all the objects
+    //redundant
     public float speed;
     // Start is called before the first frame update
     void Start()

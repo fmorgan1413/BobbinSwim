@@ -5,18 +5,20 @@ using UnityEngine;
 public class CoinSpawner : MonoBehaviour
 {
     //why have 3 different spawners?? add all spawning objects to this
-    public float timer;
+    //public float timer;
     public GameObject coin;
     public GameObject bubble;
+    public GameObject enemy;
 
     public Dictionary<GameObject, float> ObjectTimers = new Dictionary<GameObject, float>();
     // Start is called before the first frame update
     void Start()
     {
         //set timer to high amount so coins don't keep spawning
-        timer = Random.Range(3, 10);
-        ObjectTimers.Add(coin, Random.Range(3, 10));
-        ObjectTimers.Add(bubble, Random.Range(3, 10));
+        //timer = Random.Range(3, 10);
+        ObjectTimers.Add(coin, Random.Range(1f, 5f));
+        ObjectTimers.Add(bubble, Random.Range(1f, 5f));
+        ObjectTimers.Add(enemy, Random.Range(1f, 5f));
         //ObjectTimers.Add(coin, Random.Range(3, 10));
     }
 
@@ -30,8 +32,9 @@ public class CoinSpawner : MonoBehaviour
     {
         
         //timer -= Time.fixedDeltaTime;
-        SpawnThing(coin);
-        SpawnThing(bubble);
+        SpawnThing(coin, -13.5f, -9.6f);
+        SpawnThing(bubble, 9.1f, 13.3f);
+        SpawnThing(enemy, -6.3f, 13.3f);
         //spawning coins when timer is up
        // if (timer <= 0.0f)
       //  {
@@ -51,13 +54,13 @@ public class CoinSpawner : MonoBehaviour
         }
     }
 
-    public void SpawnThing(GameObject g)
+    public void SpawnThing(GameObject g, float max, float min)
     {
         ObjectTimers[g] -= Time.fixedDeltaTime;
         if (ObjectTimers[g] <= 0.0f)
         {
-            Instantiate(g, new Vector3(55, Random.Range(-5, 5), 1), Quaternion.identity);
-            ObjectTimers[g] = Random.Range(3, 10);
+            Instantiate(g, new Vector3(55, Random.Range(min, max), 1), Quaternion.identity);
+            ObjectTimers[g] = Random.Range(1f, 5f);
         }
     }
 }
