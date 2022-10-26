@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class Timer : MonoBehaviour
 {
@@ -11,8 +12,8 @@ public class Timer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        time = 0.0f;
-        minutes = Mathf.FloorToInt(time / 60);
+        time = 30.0f;
+        //minutes = Mathf.FloorToInt(time / 60);
         seconds = Mathf.FloorToInt(time % 60);
     }
 
@@ -20,10 +21,16 @@ public class Timer : MonoBehaviour
     void Update()
     {
         PlayerPrefs.SetFloat("displayTime", time);
+
+        if (time <= 0.0f)
+        {
+            SceneManager.LoadScene("gameover");
+        }
     }
     void FixedUpdate()
     {
-        time += Time.deltaTime;
+        time -= Time.deltaTime;
+        //seconds = Mathf.RoundToInt(time);
         DisplayTime(time);
     }
     void DisplayTime(float timeDisplayed)

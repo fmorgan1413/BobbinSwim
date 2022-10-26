@@ -19,6 +19,12 @@ public class WaterMovement : MonoBehaviour
     void FixedUpdate()
     {
         transform.Translate(Vector3.left * Time.deltaTime * speed);
+
+        //if the water panel gets too far off screen move it to the right of the screen
+        if (transform.position.x < -45.6)
+        {
+            transform.position = new Vector3(47.6f, 0, 2);
+        }
     }
 
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class TailHittingWater : MonoBehaviour
 {
+    //useless script moved to player movement
     public ParticleSystem bubbles;
 
     void Start()

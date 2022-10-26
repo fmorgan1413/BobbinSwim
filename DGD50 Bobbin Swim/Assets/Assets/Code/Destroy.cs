@@ -13,22 +13,28 @@ public class Destroy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        //Debug.Log(coll)
     }
     //destroy water and enemies
-    private void OnTriggerEnter2D(Collider2D other)
+
+    //why are so many of these triggers?
+
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (other.gameObject.tag == "water")
+        //collision = get
+
+        if (collision.gameObject.CompareTag("enemy"))
         {
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
         }
-        if (other.gameObject.tag == "enemy")
+        if (collision.gameObject.CompareTag("coin"))
         {
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
         }
-        if (other.gameObject.tag == "coin")
+
+        if (collision.gameObject.CompareTag("bubble"))
         {
-            Destroy(other.gameObject);
+            Destroy(collision.gameObject);
         }
     }
 }
