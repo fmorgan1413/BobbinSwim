@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI scoreText;
     public string gameover;
     public ParticleSystem bubbles;
+    public bool InWater = true;
 
     public Timer T;
     //public bool inWater;
@@ -45,21 +46,33 @@ public class PlayerMovement : MonoBehaviour
             scoreText.text = displayScore.ToString();
         }
 
-        if (Input.GetKey(KeyCode.Space))
-        {
-            rb.gravityScale = 0;
-            rb.AddForce(Vector3.up * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-            this.transform.Rotate(0, 0, rb.velocity.y / 8);
-        }
-        else
-        {
-            rb.gravityScale = 0;
-            rb.AddForce(Vector3.down * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
-            this.transform.Rotate(0, 0, rb.velocity.y / 8);
-        }
+       
 
         //rb.velocity = vel;
 
+    }
+
+    private void FixedUpdate()
+    {
+        if (InWater)
+        {
+            if (Input.GetKey(KeyCode.Space))
+            {
+                rb.gravityScale = 0;
+                rb.AddForce(Vector3.up * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                this.transform.Rotate(0, 0, rb.velocity.y / 8);
+            }
+            else
+            {
+                rb.gravityScale = 0;
+                rb.AddForce(Vector3.down * speed * Time.fixedDeltaTime, ForceMode2D.Impulse);
+                this.transform.Rotate(0, 0, rb.velocity.y / 8);
+            }
+        }
+        else
+        {
+            rb.gravityScale = 1;
+        }
     }
     //player movement in water
     private void OnTriggerStay2D(Collider2D other)
@@ -67,17 +80,15 @@ public class PlayerMovement : MonoBehaviour
         //what the hell is this?? looks overcomplicated
         if (other.gameObject.CompareTag("water"))
         {
-
+            InWater = true;
             
+
         }
-        else
-        {
-           // rb.gravityScale = 1;
-        }
+        
     }
     //player movement out of water
 
-    private void OnCollisionExit2D(Collision2D collision)
+    private void OnTriggerExit2D(Collider2D collision)
     {
         var main = bubbles.main;
 
@@ -86,14 +97,12 @@ public class PlayerMovement : MonoBehaviour
             rb.gravityScale = 1f;
             //bubbles.Pause();
             main.maxParticles = 0;
-            //inWater = false;
+            InWater = false;
         }
     }
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        var main = bubbles.main;
-
         //game over
         if (collision.gameObject.CompareTag("enemy"))
         {
@@ -111,16 +120,21 @@ public class PlayerMovement : MonoBehaviour
             score++;
             Destroy(collision.gameObject);
         }
-        if (collision.gameObject.CompareTag("water"))
-        {
-            //bubbles.Play();
-            main.maxParticles = 50;
-            //inWater = true;
-        }
         if (collision.gameObject.CompareTag("bubble"))
         {
             T.time += 5;
             Destroy(collision.gameObject);
+        }
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        var main = bubbles.main;
+        if (other.gameObject.CompareTag("water"))
+        {
+            //bubbles.Play();
+            main.maxParticles = 50;
+            //inWater = true;
         }
     }
 }
